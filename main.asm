@@ -35,11 +35,26 @@ primeira_curva_direita:
     ori   $10, $0, 46         # 46 quadradinhos para baixo
 
 loop_vertical:
-    beq   $10, $0, fim
+    beq   $10, $0, primeira_curva_esquerda
     addi  $8, $8, 512         # desce 1 linha (mesma coluna!) → +512 bytes
     sw    $9, 0($8)           # pinta o quadradinho da coluna 10
     addi  $10, $10, -1
     j     loop_vertical
+
+primeira_curva_esquerda:
+
+    addi $8, $8, -23552  # sobe 46 linhas → volta pra linha 12
+    addi $8, $8, -2560      # sobe +5 linhas → vai pra linha 7, coluna 10
+                               
+
+    addi $8, $8, -512          # sobe 1 linha
+    addi $8, $8, 4             # vai 1 coluna à direita
+    sw   $9, 0($8)             # pinta coluna L, linha 6
+
+    # Pixel 2: linha 5, coluna 12 (M)
+    addi $8, $8, -512          # sobe mais 1 linha
+    addi $8, $8, 4             # vai mais 1 coluna à direita
+    sw   $9, 0($8)             # pinta coluna M, linha 5
 
 fim:
     addi  $2, $0, 10
