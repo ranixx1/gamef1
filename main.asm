@@ -3,8 +3,7 @@ main:
     lui   $8, 0x1001        
     ori   $9, $0, 0x00FF              # $9 = 0x0000FF00
     sll   $9, $9, 8                   # desloca pra 0x00FF0000
-    ori   $9, $9, 0x0000              # não precisa, mas deixa claro
-    # Agora $9 = 0x00FF00 (verde puro)
+
 
     ori   $10, $0, 131072
 loop_grama:
@@ -119,7 +118,7 @@ curva_diagonal3:
     addi  $8,$8,-4               # volta mais 1 coluna → 116
     sw    $9,0($8)
 
-addi $10,$0,105
+addi $10,$0,105   # enrola para esquerda
 
 left:
     beq  $10,$0,curva_diagonal4
@@ -139,14 +138,73 @@ comeca_borda_centro:
     lui   $8, 0x1001
     addi  $8, $8, 6144           # 12×512 = 6144 → linha 13 do Excel
     addi  $8, $8, 80             # 20×4 = 80 → coluna U (índice 20)
-    sw    $9, 0($8)             # pinta linha 1 , coluna U
-ori   $10, $0, 87            # pinta mais 87 à direita (total 88 incluindo o U)
+    sw    $9, 0($8)       
+    
+
+    ori   $10, $0, 87            # pinta mais 87 à direita (total 88 incluindo o U)
+    
 loop_reto_ate_primeira_curva_direita:
-    beq   $10, $0, fim
+    beq   $10, $0, curvas_superiores_borda_central
     addi  $8, $8, 4              # avança 1 quadradinho à direita
     sw    $9, 0($8)              # pinta amarelo
     addi  $10, $10, -1
     j     loop_reto_ate_primeira_curva_direita
+    
+curvas_superiores_borda_central: 
+    lui   $8, 0x1001
+    addi  $8, $8, 6732
+    sw    $9, 0($8)               # T14
+
+    lui   $8, 0x1001
+    addi  $8, $8, 7088          
+    sw    $9, 0($8)               # DE14
+     
+addi $8,$8,4 # completando curva direita
+ori   $10, $0, 35         # 46 quadradinhos para baixo
+
+primeira_decida_central:
+    beq   $10, $0, curvas_inferiores_borda_central_direita
+    addi  $8, $8, 512         # desce 1 linha (mesma coluna!) → +512 bytes
+    sw    $9, 0($8)           # pinta o quadradinho da coluna 10
+    addi  $10, $10, -1
+    j     primeira_decida_central
+
+curvas_inferiores_borda_central_direita:
+    addi  $8,$8,512
+    addi  $8, $8, -4
+    sw    $9,0($8)
+    addi  $8,$8,512
+    addi  $8,$8,-4
+    sw    $9, 0($8)    
+     
+addi $10,$0,88
+
+left_borda_central:
+    beq  $10,$0,curvas_inferiores_borda_esquerda
+    sw   $9,0($8)
+    addi $8,$8,-4      # esquerda
+    addi $10,$10,-1
+    j    left_borda_central       
+	
+curvas_inferiores_borda_esquerda:
+    addi $8,$8, -512
+    addi $8,$8, 0
+    sw $9,0($8)
+    addi $8,$8, -512
+    addi $8,$8, -4
+    sw $9,0($8)
+    
+addi  $8, $8, -512            # sobe para a linha 49 (primeiro pixel a pintar)
+ori   $10, $0, 34             # 49 até 15 inclusive = 35 pixels
+
+completa_ultima_curva:
+    beq   $10, $0, fim
+    sw    $9, 0($8)   
+    addi  $8, $8, -512
+    addi  $10, $10, -1
+    j    completa_ultima_curva
+
+	
 fim:
     addi  $2, $0, 10
     syscall
