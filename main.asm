@@ -23,15 +23,15 @@ comeca_pista:
     ori   $10, $0, 11
     
 loop7:
-    beq   $10, $0, prepara_linha12
+    beq   $10, $0, prepara_linha13
     sw    $9, 0($8)
     addi  $8, $8, 4
     addi  $10, $10, -1
     j     loop7
 
-prepara_linha12:
+prepara_linha13:
     lui   $8, 0x1001
-    addi  $8, $8, 5632        # linha 12 (11*512 = 5632)
+    addi  $8, $8, 6144        # linha 12 (11*512 = 5632)
     lui   $9, 0x00FF          # recarrega cor amarela
     ori   $9, $9, 0xFF00
     ori   $10, $0, 11         
@@ -45,7 +45,7 @@ loop12:
     
 primeira_curva_direita:
     addi  $8, $8, -4
-    ori   $10, $0, 46         # 46 quadradinhos para baixo
+    ori   $10, $0, 45         # 46 quadradinhos para baixo
 
 primeira_decida:
     beq   $10, $0, primeira_curva_esquerda
@@ -198,13 +198,37 @@ addi  $8, $8, -512            # sobe para a linha 49 (primeiro pixel a pintar)
 ori   $10, $0, 34             # 49 até 15 inclusive = 35 pixels
 
 completa_ultima_curva:
-    beq   $10, $0, fim
+    beq   $10, $0, start_carro
     sw    $9, 0($8)   
     addi  $8, $8, -512
     addi  $10, $10, -1
     j    completa_ultima_curva
 
-	
-fim:
+start_carro:
+    lui   $8, 0x1001
+    ori $9,$0, 0xFF0000
+    addi $8,$8,4608
+    sw $9,0($8)
+    addi $8,$8,4
+    sw $9,0($8)         # cor do caro
+    addi $8,$8,4
+    sw $9,0($8)
+    addi $8,$8,4
+    sw $9,0($8)
+    addi $8,$8,4
+    lui $8, 0x1001      # rodas
+    addi  $8, $8,4096
+    ori $9,$0,0x0000
+    sw $9,0($8) 
+    addi $8,$8,1024
+    sw $9,0($8)
+    addi $8,$8,12
+    sw $9,0($8)
+    addi $8,$8,-1024
+    sw $9,0($8)
+    
+   
+
+game_over:
     addi  $2, $0, 10
-    syscall
+    syscall                       # termina o programa
