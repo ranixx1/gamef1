@@ -2,21 +2,23 @@
 main:
     lui   $8, 0x1001        
     ori   $9, $0, 0x00FF              # $9 = 0x0000FF00
-    sll   $9, $9, 8                   # desloca pra 0x00FF0000
+    sll   $9, $9, 8                   # desloca pra 0x00FF0000,
 
 
-    ori   $10, $0, 131072
-loop_grama:
+    ori   $10, $0, 131072 #tela toda
+    
+loop_grama:  #background
     beq   $10, $0, comeca_pista
     sw    $9, 0($8)                   # pinta de verde
     addi  $8, $8, 4
     addi  $10, $10, -1
     j     loop_grama
+    
 comeca_pista:
     lui   $8, 0x1001    
                  
 
-    # --- Linha 7 (barra horizontal curta) ---
+    # --- Linha 7 (barra horizontal curta) ---  # entrada
     addi  $8, $8, 3072                
     lui   $9, 0x00FF
     ori   $9, $9, 0xFF00              # amarelo
@@ -42,7 +44,8 @@ loop12:
     addi  $8, $8, 4
     addi  $10, $10, -1
     j     loop12
-    
+
+#bordas pista
 primeira_curva_direita:
     addi  $8, $8, -4
     ori   $10, $0, 45         # 46 quadradinhos para baixo
@@ -203,32 +206,128 @@ completa_ultima_curva:
     addi  $8, $8, -512
     addi  $10, $10, -1
     j    completa_ultima_curva
-
-start_carro:
-    lui   $8, 0x1001
-    ori $9,$0, 0xFF0000
-    addi $8,$8,4608
-    sw $9,0($8)
-    addi $8,$8,4
-    sw $9,0($8)         # cor do caro
-    addi $8,$8,4
-    sw $9,0($8)
-    addi $8,$8,4
-    sw $9,0($8)
-    addi $8,$8,4
-    lui $8, 0x1001      # rodas
-    addi  $8, $8,4096
-    ori $9,$0,0x0000
-    sw $9,0($8) 
-    addi $8,$8,1024
-    sw $9,0($8)
-    addi $8,$8,12
-    sw $9,0($8)
-    addi $8,$8,-1024
-    sw $9,0($8)
     
+#começa carro
+start_carro:
+    lui   $19, 0x1001                 # $19 = base do carro (vai ser nosso "cursor")
+
+    # Posição inicial do carro (linha 8 a 11, colunas centrais)
+    addi  $19, $19, 4608              # começa na linha 9 (4608 = 9×512)
+
+    # Cores fixas
+    ori   $20, $0, 0x00FF0000         # cor do carro
+    ori   $21, $0, 0x00000000         # Preto das rodas
+    ori   $22, $0, 0x00FFFF00         # Amarelo da borda
+    ori   $23, $0, 0x0000FF00         # Verde da grama
+
+    # Linha 9 (4 pixels vermelhos)
+    sw    $20, 0($19)
+    sw    $20, 4($19)
+    sw    $20, 8($19)
+    sw    $20, 12($19)
+
+    # Rodas 
+    sw    $21, -512($19)     # linha 8
+    sw    $21, -500($19)     # linha 8 (+12 bytes)
+    sw    $21, 512($19)      # linha 10
+    sw    $21, 524($19)      # linha 10 (+12 bytes)
+
+loop_carro:
+    # === Lê teclado ===
+    lui   $17, 0xFFFF
+    lw    $18, 0($17)
+    beq   $18, $0, loop_carro
+    lw    $25, 4($17)                  # tecla pressionada
+    # SOM DE ACELERAÇÃO
+     addi  $2, $0, 31          # MIDI note
+     addi  $4, $0, 38          # pitch: 38 = Lá bem grave (perfeito pra motor)
+     addi  $5, $0, 180         # duração curta = som contínuo e agressivo0
+     addi  $6, $0, 110         # volume alto0
+     addi  $7, $0, 30          # instrumento: 30 = Distortion Guitar (É ESSE O SEGREDO, PORRA!!!)
+     syscall
    
 
-game_over:
+    # === Apaga o carro antigo 
+    sw    $23, 0($19)
+    sw    $23, 4($19)
+    sw    $23, 8($19)
+    sw    $23, 12($19)
+    sw    $23, -512($19)
+    sw    $23, 512($19)
+    sw    $23, 524($19)
+    sw    $23, -500($19)
+
+    # === Mover a base $19 conforme tecla ===
+    addi  $24, $0, 'w'
+    beq   $25, $24, move_cima
+    addi  $24, $0, 's'
+    beq   $25, $24, move_baixo
+    addi  $24, $0, 'a'
+    beq   $25, $24, move_esq
+    addi  $24, $0, 'd'
+    beq   $25, $24, move_dir
+    j     redesenha
+
+move_cima:
+    addi  $19, $19, -512
+    j     verifica_colisao
+move_baixo:
+    addi  $19, $19, 512
+    j     verifica_colisao
+move_esq:
+    addi  $19, $19, -4
+    j     verifica_colisao
+move_dir:
+    addi  $19, $19, 4
+
+verifica_colisao:
+    # Verifica se qualquer parte do carro está sobre amarelo
+    lw    $24, 0($19)
+    beq   $24, $22, morreu
+    lw    $24, 4($19)
+    beq   $24, $22, morreu
+    lw    $24, 8($19)
+    beq   $24, $22, morreu
+    lw    $24, 12($19)
+    beq   $24, $22, morreu
+    lw    $24, -512($19)
+    beq   $24, $22, morreu
+    lw    $24, 512($19)
+    beq   $24, $22, morreu
+    lw    $24, 524($19)
+    beq   $24, $22, morreu
+    lw    $24, -500($19)
+    beq   $24, $22, morreu
+
+redesenha:
+    # === REDESENHA O CARRO NA NOVA POSIÇÃO ===
+    sw    $20, 0($19)      # 4 vermelhos na linha principal
+    sw    $20, 4($19)
+    sw    $20, 8($19)
+    sw    $20, 12($19)
+
+    sw    $21, -512($19)   # rodas de cima
+    sw    $21, -500($19)
+    sw    $21, 512($19)    # rodas de baixo
+    sw    $21, 524($19)
+
+    # Delay suave (pra não ficar piscando louco)
+    addi  $25, $0, 11000
+delay:
+    addi  $25, $25, -1
+    bne   $25, $0, delay
+
+    j     loop_carro
+
+morreu:
+    # BATIDA + EXPLOSÃO
+    addi $2,$0,31
+    addi $4,$0,36
+    addi $5,$0,800
+    addi $6,$0,127
+    addi $7,$0,115
+    syscall
+    addi $2,$0,10
+    syscall
     addi  $2, $0, 10
-    syscall                       # termina o programa
+    syscall        # fecha o programa
