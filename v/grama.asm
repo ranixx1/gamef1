@@ -206,6 +206,7 @@ completa_ultima_curva:
     addi  $8, $8, -512
     addi  $10, $10, -1
     j    completa_ultima_curva
+
     
 #começa carro
 start_carro:
