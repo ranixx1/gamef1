@@ -236,12 +236,8 @@ start_carro:
     ori $14, $0, 1              # 1 = indo pra direita, 0 = esquerda
     sw $13, 0($12)              # desenha inicial
     
-   # === OBSTÁCULO MÓVEL (vai e volta na linha 53) ===
-	lui $26, 0x1001
-	addi $26, $26, 27136      # linha 53 → 53 * 512 = 27136
-	addi $26, $26, 48         # coluna 12 (L)
-	ori  $27, $0, 1           # direção: 1 = direita
-	sw   $13, 0($26)          # desenha inicial
+
+
 
 
 # =============================================
@@ -282,39 +278,6 @@ inverte_pra_direita:
 desenha_obstaculo:
     sw $13, 0($12)              # desenha na nova posição
     
-# ===== OBSTÁCULO DA LINHA 53 =====
-
-# apaga antigo
-sw $23, 0($26)
-
-# movimento
-beq $27, $0, obs53_esq
-
-obs53_dir:
-    addi $26, $26, 4
-    lui $8, 0x1001
-    addi $8, $8, 27136      # linha 53
-    addi $8, $8, 464        # coluna 116 * 4
-    bge $26, $8, obs53_inverte_esq
-    j obs53_desenha
-
-obs53_esq:
-    addi $26, $26, -4
-    lui $8, 0x1001
-    addi $8, $8, 27136
-    addi $8, $8, 48         # coluna 12
-    ble $26, $8, obs53_inverte_dir
-    j obs53_desenha
-
-obs53_inverte_esq:
-    ori $27, $0, 0
-    j obs53_desenha
-
-obs53_inverte_dir:
-    ori $27, $0, 1
-
-obs53_desenha:
-    sw $13, 0($26)
 
 
     # 3) CHECA COLISÃO COM OBSTÁCULO LINHA 8 PRIMEIRO (ANTES DE MOVER O CARRO!)
@@ -335,24 +298,6 @@ obs53_desenha:
     lw $24, 524($19)
     beq $24, $13, morreu
     
-    # colisão obstáculo linha 53
-	lw $24, 0($19)
-	beq $24, $13, morreu
-	lw $24, 4($19)
-	beq $24, $13, morreu
-	lw $24, 8($19)
-	beq $24, $13, morreu
-	lw $24, 12($19)
-	beq $24, $13, morreu
-	lw $24, -512($19)
-	beq $24, $13, morreu
-	lw $24, -500($19)
-	beq $24, $13, morreu
-	lw $24, 512($19)
-	beq $24, $13, morreu
-	lw $24, 524($19)
-	beq $24, $13, morreu
-
 
     # 4) INPUT DO TECLADO
     lui $17, 0xFFFF
