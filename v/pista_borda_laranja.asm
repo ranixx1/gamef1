@@ -442,3 +442,5 @@ morreu:
 
     addi $2, $0, 10
     syscall            # fecha o programa
+
+    
