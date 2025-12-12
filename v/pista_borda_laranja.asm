@@ -206,7 +206,7 @@ completa_ultima_curva:
     addi  $8, $8, -512
     addi  $10, $10, -1
     j    completa_ultima_curva
-    
+   
 #começa carro
 start_carro:
     lui   $19, 0x1001                 # $19 = base do carro (vai ser nosso "cursor")
@@ -232,102 +232,213 @@ start_carro:
     sw    $21, 512($19)      # linha 10
     sw    $21, 524($19)      # linha 10 (+12 bytes)
 
+    # === OBSTÁCULO MÓVEL (vai e volta na linha 8) ===
+    lui $12, 0x1001
+    addi $12, $12, 3584         # linha 8
+    addi $12, $12, 48           # começa na coluna 12 (L)
+    ori $13, $0, 0x150704       # cor
+    ori $14, $0, 1              # 1 = indo pra direita, 0 = esquerda
+    sw $13, 0($12)              # desenha inicial
+    
+    # === OBSTÁCULO MÓVEL (vai e volta na linha 53) ===
+    lui $26, 0x1001
+    addi $26, $26, 27136      # linha 53 → 53 * 512 = 27136
+    addi $26, $26, 48         # coluna 12 (L)
+    ori  $27, $0, 1           # direção: 1 = direita
+	sw   $13, 0($26)          # desenha inicial
+	
 loop_carro:
-    # === Lê teclado ===
-    lui   $17, 0xFFFF
-    lw    $18, 0($17)
-    beq   $18, $0, loop_carro
-    lw    $25, 4($17)                  # tecla pressionada
-    # SOM DE ACELERAÇÃO
-     addi  $2, $0, 31          # MIDI note
-     addi  $4, $0, 38          # pitch: 38 = Lá bem grave (perfeito pra motor)
-     addi  $5, $0, 180         # duração curta = som contínuo e agressivo0
-     addi  $6, $0, 110         # volume alto0
-     addi  $7, $0, 30          # instrumento: 30 = Distortion Guitar (É ESSE O SEGREDO, PORRA!!!)
-     syscall
-   
+    # 1) APAGA OBSTÁCULO ANTIGO
+    sw $23, 0($12)
 
-    # === Apaga o carro antigo 
-    sw    $23, 0($19)
-    sw    $23, 4($19)
-    sw    $23, 8($19)
-    sw    $23, 12($19)
-    sw    $23, -512($19)
-    sw    $23, 512($19)
-    sw    $23, 524($19)
-    sw    $23, -500($19)
+    # 2) MOVE O OBSTÁCULO
+    beq $14, $0, indo_esquerda
 
-    # === Mover a base $19 conforme tecla ===
-    addi  $24, $0, 'w'
-    beq   $25, $24, move_cima
-    addi  $24, $0, 's'
-    beq   $25, $24, move_baixo
-    addi  $24, $0, 'a'
-    beq   $25, $24, move_esq
-    addi  $24, $0, 'd'
-    beq   $25, $24, move_dir
-    j     redesenha
+indo_direita:
+    addi $12, $12, 4
+    # Checa se passou da coluna 116 (LM)
+    lui $8, 0x1001
+    addi $8, $8, 3584
+    addi $8, $8, 464            # 116*4 = 464
+    bge $12, $8, inverte_pra_esquerda   # se passou → vira esquerda
+    j desenha_obstaculo
 
-move_cima:
-    addi  $19, $19, -512
-    j     verifica_colisao
-move_baixo:
-    addi  $19, $19, 512
-    j     verifica_colisao
-move_esq:
-    addi  $19, $19, -4
-    j     verifica_colisao
-move_dir:
-    addi  $19, $19, 4
+indo_esquerda:
+    addi $12, $12, -4
+    # Checa se passou da coluna 12 (L)
+    lui $8, 0x1001
+    addi $8, $8, 3584
+    addi $8, $8, 48             # 12*4 = 48
+    ble $12, $8, inverte_pra_direita    # se passou → vira direita
+    j desenha_obstaculo
 
-verifica_colisao:
-    # Verifica se qualquer parte do carro está sobre amarelo
-    lw    $24, 0($19)
-    beq   $24, $22, morreu
-    lw    $24, 4($19)
-    beq   $24, $22, morreu
-    lw    $24, 8($19)
-    beq   $24, $22, morreu
-    lw    $24, 12($19)
-    beq   $24, $22, morreu
-    lw    $24, -512($19)
-    beq   $24, $22, morreu
-    lw    $24, 512($19)
-    beq   $24, $22, morreu
-    lw    $24, 524($19)
-    beq   $24, $22, morreu
-    lw    $24, -500($19)
-    beq   $24, $22, morreu
+inverte_pra_esquerda:
+    add $14, $0, $0             # direção = esquerda
+    j desenha_obstaculo
 
-redesenha:
-    # === REDESENHA O CARRO NA NOVA POSIÇÃO ===
-    sw    $20, 0($19)      # 4 vermelhos na linha principal
-    sw    $20, 4($19)
-    sw    $20, 8($19)
-    sw    $20, 12($19)
+inverte_pra_direita:
+    addi $14, $0, 1             # direção = direita
 
-    sw    $21, -512($19)   # rodas de cima
-    sw    $21, -500($19)
-    sw    $21, 512($19)    # rodas de baixo
-    sw    $21, 524($19)
+desenha_obstaculo:
+    sw $13, 0($12)              # desenha na nova posição
+    
+# ===== OBSTÁCULO DA LINHA 53 =====
 
-    # Delay suave (pra não ficar piscando louco)
-    addi  $25, $0, 11000
-delay:
-    addi  $25, $25, -1
-    bne   $25, $0, delay
+# apaga antigo
+sw $23, 0($26)
 
-    j     loop_carro
+# movimento
+beq $27, $0, obs53_esq
+
+obs53_dir:
+    addi $26, $26, 4
+    lui $8, 0x1001
+    addi $8, $8, 27136      # linha 53
+    addi $8, $8, 464        # coluna 116 * 4
+    bge $26, $8, obs53_inverte_esq
+    j obs53_desenha
+
+obs53_esq:
+    addi $26, $26, -4
+    lui $8, 0x1001
+    addi $8, $8, 27136
+    addi $8, $8, 48         # coluna 12
+    ble $26, $8, obs53_inverte_dir
+    j obs53_desenha
+
+obs53_inverte_esq:
+    ori $27, $0, 0
+    j obs53_desenha
+
+obs53_inverte_dir:
+    ori $27, $0, 1
+
+obs53_desenha:
+    sw $13, 0($26)
+
+
+    # 3) CHECA COLISÃO COM OBSTÁCULO LINHA 8 PRIMEIRO (ANTES DE MOVER O CARRO!)
+    lw $24, 0($19)
+    beq $24, $13, morreu
+    lw $24, 4($19)
+    beq $24, $13, morreu
+    lw $24, 8($19)
+    beq $24, $13, morreu
+    lw $24, 12($19)
+    beq $24, $13, morreu
+    lw $24, -512($19)
+    beq $24, $13, morreu
+    lw $24, -500($19)
+    beq $24, $13, morreu
+    lw $24, 512($19)
+    beq $24, $13, morreu
+    lw $24, 524($19)
+    beq $24, $13, morreu
+    
+    # colisão obstáculo linha 53
+	lw $24, 0($19)
+	beq $24, $13, morreu
+	lw $24, 4($19)
+	beq $24, $13, morreu
+	lw $24, 8($19)
+	beq $24, $13, morreu
+	lw $24, 12($19)
+	beq $24, $13, morreu
+	lw $24, -512($19)
+	beq $24, $13, morreu
+	lw $24, -500($19)
+	beq $24, $13, morreu
+	lw $24, 512($19)
+	beq $24, $13, morreu
+	lw $24, 524($19)
+	beq $24, $13, morreu
+
+
+    # 4) INPUT DO TECLADO
+    lui $17, 0xFFFF
+    lw $18, 0($17)
+    beq $18, $0, sem_tecla
+    lw $25, 4($17)
+
+    # Som do motor
+    addi $2, $0, 31
+    addi $4, $0, 38
+    addi $5, $0, 100
+    addi $6, $0, 100
+    addi $7, $0, 30
+    syscall
+
+sem_tecla:
+    # 5) APAGA CARRO ANTIGO
+    sw $23, 0($19)
+    sw $23, 4($19)
+    sw $23, 8($19)
+    sw $23, 12($19)
+    sw $23, -512($19)
+    sw $23, -500($19)
+    sw $23, 512($19)
+    sw $23, 524($19)
+
+    # Movimento do carro
+    beq $25, 'w', move_cima
+    beq $25, 's', move_baixo
+    beq $25, 'a', move_esq
+    beq $25, 'd', move_dir
+    j pula_movimento
+
+move_cima:  addi $19, $19, -512
+j pula_movimento
+move_baixo: addi $19, $19, 512
+j pula_movimento
+move_esq:   addi $19, $19, -4
+j pula_movimento
+move_dir:   addi $19, $19, 4
+
+pula_movimento:
+    # 6) CHECA COLISÃO COM A PISTA (depois do movimento)
+    lw $24, 0($19)
+    beq $24, $22, morreu
+    lw $24, 4($19)
+    beq $24, $22, morreu
+    lw $24, 8($19)
+    beq $24, $22, morreu
+    lw $24, 12($19)
+    beq $24, $22, morreu
+    lw $24, -512($19)
+    beq $24, $22, morreu
+    lw $24, -500($19)
+    beq $24, $22, morreu
+    lw $24, 512($19)
+    beq $24, $22, morreu
+    lw $24, 524($19)
+    beq $24, $22, morreu
+
+    # 7) REDESENHA O CARRO
+    sw $20, 0($19)
+    sw $20, 4($19)
+    sw $20, 8($19)
+    sw $20, 12($19)
+    sw $21, -512($19)
+    sw $21, -500($19)
+    sw $21, 512($19)
+    sw $21, 524($19)
+
+    # Delay (ajusta velocidade do obstáculo)
+    addi $25, $0, 15000        # 8000 = rápido pra caramba, 20000 = tranquilo
+delay_loop:
+    addi $25, $25, -1
+    bne $25, $0, delay_loop
+
+    j loop_carro
 
 morreu:
-    # BATIDA + EXPLOSÃO
-    addi $2,$0,31
-    addi $4,$0,36
-    addi $5,$0,800
-    addi $6,$0,127
-    addi $7,$0,115
+    # Explosão sonora
+    addi $2, $0, 31
+    addi $4, $0, 36
+    addi $5, $0, 1200
+    addi $6, $0, 127
+    addi $7, $0, 115
     syscall
-    addi $2,$0,10
-    syscall
-    addi  $2, $0, 10
-    syscall        # fecha o programa
+
+    addi $2, $0, 10
+    syscall            # fecha o programa
