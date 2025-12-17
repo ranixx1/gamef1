@@ -2,17 +2,25 @@
 main:
     lui  $8, 0x1001          
 
+    # cor fundo 
+    ori  $9, $0, 0xFFFFFF
+    
+    ori   $10, $0, 131072
+loop_fundo:  #background
+    beq   $10, $0, continua_0
+    sw    $9, 0($8)                   # pinta de verde
+    addi  $8, $8, 4
+    addi  $10, $10, -1
+    j     loop_fundo
+    
+continua_0: 
     # posição inicial (linha 16, coluna 32)
     addi $8, $8, 8192        # 16 × 512
     addi $8, $8, 84         # 32 × 4
-
-    # cor (ciano)
-    ori  $9, $0, 0x00FFFF
-
-    addi $11, $0, 36         # altura (linhas)
-
+	ori  $9, $0, 0x00FFFF
+	addi $11, $0, 36         # altura (linhas)
 loop_frontal_1:
-    beq  $11, $0, continua
+    beq  $11, $0, continua_1
 
     addi $10, $0, 5          # largura (colunas)
     add  $12, $8, $0            # salva início da linha
@@ -30,7 +38,7 @@ prox_linha:
     addi $11, $11, -1
     j    loop_frontal_1
 
-continua:
+continua_1:
     lui  $8, 0x1001          
 
     # posição inicial (linha 12, coluna 25)
@@ -470,6 +478,7 @@ prox_linha_16:
     j    loop_ponta_2
 
 
-fim:
-    addi $2, $0, 10
-    syscall
+fim: addi $2, $0, 10
+    syscall            # fecha o programa
+
+    
