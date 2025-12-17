@@ -1,9 +1,502 @@
 .text
 main:
-    lui   $8, 0x1001        
-    ori   $9, $0, 0x00FF              # $9 = 0x0000FF00
-    sll   $9, $9, 8                   # desloca pra 0x00FF0000,
+    lui  $8, 0x1001          
 
+    # cor fundo 
+    ori  $9, $0, 0xFFFFFF
+    
+    ori   $10, $0, 131072
+loop_fundo:  #background
+    beq   $10, $0, continua_0
+    sw    $9, 0($8)                   # pinta de verde
+    addi  $8, $8, 4
+    addi  $10, $10, -1
+    j     loop_fundo
+    
+continua_0: 
+    # posição inicial (linha 16, coluna 32)
+    addi $8, $8, 8192        # 16 × 512
+    addi $8, $8, 84         # 32 × 4
+	ori  $9, $0, 0x00FFFF
+	addi $11, $0, 36         # altura (linhas)
+loop_frontal_1:
+    beq  $11, $0, continua_1
+
+    addi $10, $0, 5          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna:
+    beq  $10, $0, prox_linha
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna
+
+prox_linha:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_frontal_1
+
+continua_1:
+    lui  $8, 0x1001          
+
+    # posição inicial (linha 12, coluna 25)
+    addi $8, $8, 6144        # 12 × 512
+    addi $8, $8, 100         # 25 × 4
+    # cor (ciano)
+    ori  $9, $0, 0x0000FF
+
+    addi $11, $0, 44         # altura (linhas)
+loop_frontal_2:
+    beq  $11, $0, continua_2
+
+    addi $10, $0, 5          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_2:
+    beq  $10, $0, prox_linha_2
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_2
+
+prox_linha_2:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_frontal_2
+
+continua_2:
+lui  $8, 0x1001          
+
+    # posição inicial (linha 25, coluna 32)
+    addi $8, $8, 12800        # 25 × 512
+    addi $8, $8, 84         # 32 × 4
+
+    # cor (ciano)
+    ori  $9, $0, 0x00FFFF
+
+    addi $11, $0, 17         # altura (linhas)
+
+loop_centro:
+    beq  $11, $0, continua_3
+
+    addi $10, $0, 89          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_centro:
+    beq  $10, $0, prox_linha_3
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_centro
+
+prox_linha_3:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_centro
+
+continua_3:
+ 	lui  $8, 0x1001          
+
+    # posição inicial (linha 12, coluna 37)
+    addi $8, $8, 6144        # 16 × 512
+    addi $8, $8, 148         # 37 × 4
+
+    # cor (ciano)
+    ori  $9, $0, 0x00FFFF
+    
+addi $11, $0, 8         # altura (linhas)
+
+############################ rodas ########################################
+loop_roda_1:
+    beq  $11, $0, continua_4
+
+    addi $10, $0, 14          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_roda:
+    beq  $10, $0, prox_linha_4
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_roda
+
+prox_linha_4:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_roda_1
+    
+continua_4:
+ 	lui  $8, 0x1001          
+
+    # posição inicial (linha 12, coluna 37)
+    addi $8, $8, 6144        # 12 × 512
+    addi $8, $8, 368         # 92 × 4
+
+    # cor (ciano)
+    ori  $9, $0, 0x00FFFF
+    
+addi $11, $0, 8         # altura (linhas)
+
+loop_roda_2:
+    beq  $11, $0, continua_5
+
+    addi $10, $0, 14          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_roda_2:
+    beq  $10, $0, prox_linha_5
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_roda_2
+
+prox_linha_5:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_roda_2
+    
+continua_5:
+ 	lui  $8, 0x1001          
+
+    # posição inicial (linha 46, coluna 37)
+    addi $8, $8, 24576        # 46 × 512
+    addi $8, $8, 148         # 37 × 4
+
+    # cor (ciano)
+    ori  $9, $0, 0x00FFFF
+    
+addi $11, $0, 8         # altura (linhas)
+
+loop_roda_3:
+    beq  $11, $0, continua_6
+
+    addi $10, $0, 14          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_roda_3:
+    beq  $10, $0, prox_linha_6
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_roda_3
+
+prox_linha_6:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_roda_3
+
+continua_6:
+ 	lui  $8, 0x1001          
+
+    # posição inicial (linha 46, coluna 37)
+    addi $8, $8, 24576        # 46 × 512
+    addi $8, $8, 368         # 37 × 4
+
+    # cor (ciano)
+    ori  $9, $0, 0x00FFFF
+    
+addi $11, $0, 8         # altura (linhas)
+
+loop_roda_4:
+    beq  $11, $0, continua_7
+
+    addi $10, $0, 14          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_roda_4:
+    beq  $10, $0, prox_linha_7
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_roda_4
+
+prox_linha_7:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_roda_4   
+
+############################ traseira ########################################
+continua_7:
+	lui  $8, 0x1001          
+
+    # posição inicial (linha 20, coluna 106)
+    addi $8, $8, 10240        # 16 × 512
+    addi $8, $8, 424         # 32 × 4
+
+    addi $11, $0, 28         # altura (linhas)
+
+loop_traseira:
+    beq  $11, $0, continua_8
+
+    addi $10, $0, 5          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_traseira:
+    beq  $10, $0, prox_linha_8
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_traseira
+
+prox_linha_8:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_traseira
+    
+############################ pinos rodas ########################################
+continua_8:
+	lui  $8, 0x1001          
+	ori $9,$0 0x0000FF
+    # posição inicial (linha 20, coluna 42)
+    addi $8, $8, 10240        # 16 × 512
+    addi $8, $8, 168         # 42 × 4
+
+    addi $11, $0, 5         # altura (linhas)
+
+loop_pino_1:
+    beq  $11, $0, continua_9
+
+    addi $10, $0, 4          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_pino:
+    beq  $10, $0, prox_linha_9
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_pino
+
+prox_linha_9:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_pino_1
+    
+continua_9:
+	lui  $8, 0x1001          
+	ori $9,$0 0x0000FF
+    # posição inicial (linha 20, coluna 99)
+    addi $8, $8, 10240        # 16 × 512
+    addi $8, $8, 388       # 42 × 4
+
+    addi $11, $0, 5         # altura (linhas)
+
+loop_pino_2:
+    beq  $11, $0, continua_10
+
+    addi $10, $0, 4          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_pino_2:
+    beq  $10, $0, prox_linha_10
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_pino_2
+
+prox_linha_10:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_pino_2
+    
+
+continua_10:
+	lui  $8, 0x1001          
+	ori $9,$0 0x0000FF
+    # posição inicial (linha 20, coluna 42)
+    addi $8, $8, 21504        # 16 × 512
+    addi $8, $8, 168         # 42 × 4
+
+    addi $11, $0, 6         # altura (linhas)
+
+loop_pino_3:
+    beq  $11, $0, continua_11
+
+    addi $10, $0, 4          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_pino_3:
+    beq  $10, $0, prox_linha_11
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_pino_3
+
+prox_linha_11:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_pino_3
+    
+continua_11:
+	lui  $8, 0x1001          
+	ori $9,$0 0x0000FF
+    # posição inicial (linha 20, coluna 99)
+    addi $8, $8, 21504        # 16 × 512
+    addi $8, $8, 388       # 42 × 4
+
+    addi $11, $0, 6         # altura (linhas)
+
+loop_pino_4:
+    beq  $11, $0, continua_12
+
+    addi $10, $0, 4          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_pino_4:
+    beq  $10, $0, prox_linha_12
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_pino_4
+
+prox_linha_12:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_pino_4
+
+continua_12:
+	lui  $8, 0x1001    
+	ori  $9, $0, 0x00FFFF      
+    # posição inicial (linha 20, coluna xx)
+    addi $8, $8, 10240        # 20 × 512
+    addi $8, $8, 204       # xx × 4
+
+    addi $11, $0, 28         # altura (linhas)
+
+loop_centro_lado_menor:
+    beq  $11, $0, continua_13
+
+    addi $10, $0, 41          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_centro_lado_menor:
+    beq  $10, $0, prox_linha_13
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_centro_lado_menor
+
+prox_linha_13:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_centro_lado_menor
+
+continua_13:
+	lui  $8, 0x1001          
+    # posição inicial (linha 17, coluna xx)
+    addi $8, $8, 8704        # 17 × 512
+    addi $8, $8, 224    # 47 × 4
+
+    addi $11, $0, 34         # altura (linhas)
+
+loop_centro_lado_maior:
+    beq  $11, $0, continua_15
+    ori  $9, $0, 0x00FFFF
+    addi $10, $0, 31          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_centro_lado_maior:
+    beq  $10, $0, prox_linha_14
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_centro_lado_maior
+
+prox_linha_14:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_centro_lado_maior
+
+
+############################## pontas ################
+continua_15:
+	lui  $8, 0x1001          
+    # posição inicial (linha 17, coluna xx)
+    addi $8, $8, 6144        # 17 × 512
+    addi $8, $8, 120    #  × 4
+
+    addi $11, $0, 4         # altura (linhas)
+
+loop_ponta_1:
+    beq  $11, $0, continua_16
+    ori  $9, $0, 0x0000FF
+    addi $10, $0, 4          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_ponta_1:
+    beq  $10, $0, prox_linha_15
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_ponta_1
+
+prox_linha_15:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_ponta_1
+    
+continua_16:
+	lui  $8, 0x1001          
+    # posição inicial (linha 17, coluna xx)
+    addi $8, $8, 26624        # 17 × 512
+    addi $8, $8, 120    #  
+
+    addi $11, $0, 4         # altura (linhas)
+
+loop_ponta_2:
+    beq  $11, $0, espera_start
+    ori  $9, $0, 0x0000FF
+    addi $10, $0, 4          # largura (colunas)
+    add  $12, $8, $0            # salva início da linha
+
+loop_coluna_ponta_2:
+    beq  $10, $0, prox_linha_16
+    sw   $9, 0($8)
+    addi $8, $8, 4           # direita
+    addi $10, $10, -1
+    j    loop_coluna_ponta_2
+
+prox_linha_16:
+    move $8, $12             # volta pro início da linha
+    addi $8, $8, 512         # desce uma linha
+    addi $11, $11, -1
+    j    loop_ponta_2
+
+############################
+# ESPERA TECLA 'Z'
+############################
+espera_start:
+    lui  $17, 0xFFFF       # MMIO teclado
+    lw   $18, 0($17)       # status
+    beq  $18, $0, espera_start  # nenhuma tecla
+
+    lw   $19, 4($17)       # código ASCII da tecla
+    beq  $19, 'z', inicia_jogo
+    beq  $19, 'Z', inicia_jogo  # opcional (Z maiúsculo)
+
+    j espera_start
+############################
+# ÁREA DO JOGO
+############################
+inicia_jogo:
+main_jogo:
+    lui   $8, 0x1001        
+    ori   $9, $0, 0x606060             # $9 = 0x0000FF00
 
     ori   $10, $0, 131072 #tela toda
     
@@ -21,7 +514,7 @@ comeca_pista:
     # --- Linha 7 (barra horizontal curta) ---  # entrada
     addi  $8, $8, 3072                
     lui   $9, 0x00FF
-    ori   $9, $9, 0xFF00              # amarelo
+    ori   $9, $9, 0xFFA500              # laranja
     ori   $10, $0, 11
     
 loop7:
@@ -35,7 +528,7 @@ prepara_linha13:
     lui   $8, 0x1001
     addi  $8, $8, 6144        # linha 12 (11*512 = 5632)
     lui   $9, 0x00FF          # recarrega cor amarela
-    ori   $9, $9, 0xFF00
+    ori   $9, $9, 0xFFA500
     ori   $10, $0, 11         
 
 loop12:
@@ -206,7 +699,7 @@ completa_ultima_curva:
     addi  $8, $8, -512
     addi  $10, $10, -1
     j    completa_ultima_curva
-    
+   
 #começa carro
 start_carro:
     lui   $19, 0x1001                 # $19 = base do carro (vai ser nosso "cursor")
@@ -217,8 +710,8 @@ start_carro:
     # Cores fixas
     ori   $20, $0, 0x00FF0000         # cor do carro
     ori   $21, $0, 0x00000000         # Preto das rodas
-    ori   $22, $0, 0x00FFFF00         # Amarelo da borda
-    ori   $23, $0, 0x0000FF00         # Verde da grama
+    ori   $22, $0, 0xFFA500         # Amarelo da borda
+    ori   $23, $0, 0x606060          # Verde da grama
 
     # Linha 9 (4 pixels vermelhos)
     sw    $20, 0($19)
@@ -232,102 +725,215 @@ start_carro:
     sw    $21, 512($19)      # linha 10
     sw    $21, 524($19)      # linha 10 (+12 bytes)
 
+    # === OBSTÁCULO MÓVEL (vai e volta na linha 8) ===
+    lui $12, 0x1001
+    addi $12, $12, 3584         # linha 8
+    addi $12, $12, 48           # começa na coluna 12 (L)
+    ori $13, $0, 0x150704       # cor
+    ori $14, $0, 1              # 1 = indo pra direita, 0 = esquerda
+    sw $13, 0($12)              # desenha inicial
+    
+    # === OBSTÁCULO MÓVEL (vai e volta na linha 53) ===
+    lui $26, 0x1001
+    addi $26, $26, 27136      # linha 53 → 53 * 512 = 27136
+    addi $26, $26, 48         # coluna 12 (L)
+    ori  $27, $0, 1           # direção: 1 = direita
+	sw   $13, 0($26)          # desenha inicial
+	
 loop_carro:
-    # === Lê teclado ===
-    lui   $17, 0xFFFF
-    lw    $18, 0($17)
-    beq   $18, $0, loop_carro
-    lw    $25, 4($17)                  # tecla pressionada
-    # SOM DE ACELERAÇÃO
-     addi  $2, $0, 31          # MIDI note
-     addi  $4, $0, 38          # pitch: 38 = Lá bem grave (perfeito pra motor)
-     addi  $5, $0, 180         # duração curta = som contínuo e agressivo0
-     addi  $6, $0, 110         # volume alto0
-     addi  $7, $0, 30          # instrumento: 30 = Distortion Guitar (É ESSE O SEGREDO, PORRA!!!)
-     syscall
-   
+    # 1) APAGA OBSTÁCULO ANTIGO
+    sw $23, 0($12)
 
-    # === Apaga o carro antigo 
-    sw    $23, 0($19)
-    sw    $23, 4($19)
-    sw    $23, 8($19)
-    sw    $23, 12($19)
-    sw    $23, -512($19)
-    sw    $23, 512($19)
-    sw    $23, 524($19)
-    sw    $23, -500($19)
+    # 2) MOVE O OBSTÁCULO
+    beq $14, $0, indo_esquerda
 
-    # === Mover a base $19 conforme tecla ===
-    addi  $24, $0, 'w'
-    beq   $25, $24, move_cima
-    addi  $24, $0, 's'
-    beq   $25, $24, move_baixo
-    addi  $24, $0, 'a'
-    beq   $25, $24, move_esq
-    addi  $24, $0, 'd'
-    beq   $25, $24, move_dir
-    j     redesenha
+indo_direita:
+    addi $12, $12, 4
+    # Checa se passou da coluna 116 (LM)
+    lui $8, 0x1001
+    addi $8, $8, 3584
+    addi $8, $8, 464            # 116*4 = 464
+    bge $12, $8, inverte_pra_esquerda   # se passou → vira esquerda
+    j desenha_obstaculo
 
-move_cima:
-    addi  $19, $19, -512
-    j     verifica_colisao
-move_baixo:
-    addi  $19, $19, 512
-    j     verifica_colisao
-move_esq:
-    addi  $19, $19, -4
-    j     verifica_colisao
-move_dir:
-    addi  $19, $19, 4
+indo_esquerda:
+    addi $12, $12, -4
+    # Checa se passou da coluna 12 (L)
+    lui $8, 0x1001
+    addi $8, $8, 3584
+    addi $8, $8, 48             # 12*4 = 48
+    ble $12, $8, inverte_pra_direita    # se passou → vira direita
+    j desenha_obstaculo
 
-verifica_colisao:
-    # Verifica se qualquer parte do carro está sobre amarelo
-    lw    $24, 0($19)
-    beq   $24, $22, morreu
-    lw    $24, 4($19)
-    beq   $24, $22, morreu
-    lw    $24, 8($19)
-    beq   $24, $22, morreu
-    lw    $24, 12($19)
-    beq   $24, $22, morreu
-    lw    $24, -512($19)
-    beq   $24, $22, morreu
-    lw    $24, 512($19)
-    beq   $24, $22, morreu
-    lw    $24, 524($19)
-    beq   $24, $22, morreu
-    lw    $24, -500($19)
-    beq   $24, $22, morreu
+inverte_pra_esquerda:
+    add $14, $0, $0             # direção = esquerda
+    j desenha_obstaculo
 
-redesenha:
-    # === REDESENHA O CARRO NA NOVA POSIÇÃO ===
-    sw    $20, 0($19)      # 4 vermelhos na linha principal
-    sw    $20, 4($19)
-    sw    $20, 8($19)
-    sw    $20, 12($19)
+inverte_pra_direita:
+    addi $14, $0, 1             # direção = direita
 
-    sw    $21, -512($19)   # rodas de cima
-    sw    $21, -500($19)
-    sw    $21, 512($19)    # rodas de baixo
-    sw    $21, 524($19)
+desenha_obstaculo:
+    sw $13, 0($12)              # desenha na nova posição
+    
+# ===== OBSTÁCULO DA LINHA 53 =====
 
-    # Delay suave (pra não ficar piscando louco)
-    addi  $25, $0, 11000
-delay:
-    addi  $25, $25, -1
-    bne   $25, $0, delay
+# apaga antigo
+sw $23, 0($26)
 
-    j     loop_carro
+# movimento
+beq $27, $0, obs53_esq
+
+obs53_dir:
+    addi $26, $26, 4
+    lui $8, 0x1001
+    addi $8, $8, 27136      # linha 53
+    addi $8, $8, 464        # coluna 116 * 4
+    bge $26, $8, obs53_inverte_esq
+    j obs53_desenha
+
+obs53_esq:
+    addi $26, $26, -4
+    lui $8, 0x1001
+    addi $8, $8, 27136
+    addi $8, $8, 48         # coluna 12
+    ble $26, $8, obs53_inverte_dir
+    j obs53_desenha
+
+obs53_inverte_esq:
+    ori $27, $0, 0
+    j obs53_desenha
+
+obs53_inverte_dir:
+    ori $27, $0, 1
+
+obs53_desenha:
+    sw $13, 0($26)
+
+
+    # 3) CHECA COLISÃO COM OBSTÁCULO LINHA 8 PRIMEIRO (ANTES DE MOVER O CARRO!)
+    lw $24, 0($19)
+    beq $24, $13, morreu
+    lw $24, 4($19)
+    beq $24, $13, morreu
+    lw $24, 8($19)
+    beq $24, $13, morreu
+    lw $24, 12($19)
+    beq $24, $13, morreu
+    lw $24, -512($19)
+    beq $24, $13, morreu
+    lw $24, -500($19)
+    beq $24, $13, morreu
+    lw $24, 512($19)
+    beq $24, $13, morreu
+    lw $24, 524($19)
+    beq $24, $13, morreu
+    
+    # colisão obstáculo linha 53
+	lw $24, 0($19)
+	beq $24, $13, morreu
+	lw $24, 4($19)
+	beq $24, $13, morreu
+	lw $24, 8($19)
+	beq $24, $13, morreu
+	lw $24, 12($19)
+	beq $24, $13, morreu
+	lw $24, -512($19)
+	beq $24, $13, morreu
+	lw $24, -500($19)
+	beq $24, $13, morreu
+	lw $24, 512($19)
+	beq $24, $13, morreu
+	lw $24, 524($19)
+	beq $24, $13, morreu
+
+
+    # 4) INPUT DO TECLADO
+    lui $17, 0xFFFF
+    lw $18, 0($17)
+    beq $18, $0, sem_tecla
+    lw $25, 4($17)
+
+    # Som do motor
+    addi $2, $0, 31
+    addi $4, $0, 38
+    addi $5, $0, 100
+    addi $6, $0, 100
+    addi $7, $0, 30
+    syscall
+
+sem_tecla:
+    # 5) APAGA CARRO ANTIGO
+    sw $23, 0($19)
+    sw $23, 4($19)
+    sw $23, 8($19)
+    sw $23, 12($19)
+    sw $23, -512($19)
+    sw $23, -500($19)
+    sw $23, 512($19)
+    sw $23, 524($19)
+
+    # Movimento do carro
+    beq $25, 'w', move_cima
+    beq $25, 's', move_baixo
+    beq $25, 'a', move_esq
+    beq $25, 'd', move_dir
+    j pula_movimento
+
+move_cima:  addi $19, $19, -512
+j pula_movimento
+move_baixo: addi $19, $19, 512
+j pula_movimento
+move_esq:   addi $19, $19, -4
+j pula_movimento
+move_dir:   addi $19, $19, 4
+
+pula_movimento:
+    # 6) CHECA COLISÃO COM A PISTA (depois do movimento)
+    lw $24, 0($19)
+    beq $24, $22, morreu
+    lw $24, 4($19)
+    beq $24, $22, morreu
+    lw $24, 8($19)
+    beq $24, $22, morreu
+    lw $24, 12($19)
+    beq $24, $22, morreu
+    lw $24, -512($19)
+    beq $24, $22, morreu
+    lw $24, -500($19)
+    beq $24, $22, morreu
+    lw $24, 512($19)
+    beq $24, $22, morreu
+    lw $24, 524($19)
+    beq $24, $22, morreu
+
+    # 7) REDESENHA O CARRO
+    sw $20, 0($19)
+    sw $20, 4($19)
+    sw $20, 8($19)
+    sw $20, 12($19)
+    sw $21, -512($19)
+    sw $21, -500($19)
+    sw $21, 512($19)
+    sw $21, 524($19)
+
+    # Delay (ajusta velocidade do obstáculo)
+    addi $25, $0, 15000        # 8000 = rápido pra caramba, 20000 = tranquilo
+delay_loop:
+    addi $25, $25, -1
+    bne $25, $0, delay_loop
+
+    j loop_carro
 
 morreu:
-    # BATIDA + EXPLOSÃO
-    addi $2,$0,31
-    addi $4,$0,36
-    addi $5,$0,800
-    addi $6,$0,127
-    addi $7,$0,115
+    # Explosão sonora
+    addi $2, $0, 31
+    addi $4, $0, 36
+    addi $5, $0, 1200
+    addi $6, $0, 127
+    addi $7, $0, 115
     syscall
-    addi $2,$0,10
-    syscall
-    addi  $2, $0, 10
-    syscall        # fecha o programa
+
+    addi $2, $0, 10
+    syscall            # fecha o programa
+
+    
