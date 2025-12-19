@@ -3,7 +3,7 @@ main:
     lui  $8, 0x1001          
 
     # cor fundo 
-    ori  $9, $0, 0xFFFFFF
+    ori  $9, $0, 0x606060
     
     ori   $10, $0, 131072
 loop_fundo:  #background
@@ -17,7 +17,7 @@ continua_0:
     # posição inicial (linha 16, coluna 32)
     addi $8, $8, 8192        # 16 × 512
     addi $8, $8, 84         # 32 × 4
-	ori  $9, $0, 0x00FFFF
+	ori  $9, $0, 0xFF0000
 	addi $11, $0, 36         # altura (linhas)
 loop_frontal_1:
     beq  $11, $0, continua_1
@@ -45,7 +45,7 @@ continua_1:
     addi $8, $8, 6144        # 12 × 512
     addi $8, $8, 100         # 25 × 4
     # cor (ciano)
-    ori  $9, $0, 0x0000FF
+    ori  $9, $0, 0x000000
 
     addi $11, $0, 44         # altura (linhas)
 loop_frontal_2:
@@ -75,7 +75,7 @@ lui  $8, 0x1001
     addi $8, $8, 84         # 32 × 4
 
     # cor (ciano)
-    ori  $9, $0, 0x00FFFF
+    ori  $9, $0, 0xFF0000
 
     addi $11, $0, 17         # altura (linhas)
 
@@ -106,7 +106,7 @@ continua_3:
     addi $8, $8, 148         # 37 × 4
 
     # cor (ciano)
-    ori  $9, $0, 0x00FFFF
+    ori  $9, $0, 0xFF0000
     
 addi $11, $0, 8         # altura (linhas)
 
@@ -138,7 +138,7 @@ continua_4:
     addi $8, $8, 368         # 92 × 4
 
     # cor (ciano)
-    ori  $9, $0, 0x00FFFF
+    ori  $9, $0, 0xFF0000
     
 addi $11, $0, 8         # altura (linhas)
 
@@ -169,7 +169,7 @@ continua_5:
     addi $8, $8, 148         # 37 × 4
 
     # cor (ciano)
-    ori  $9, $0, 0x00FFFF
+    ori  $9, $0, 0xFF0000
     
 addi $11, $0, 8         # altura (linhas)
 
@@ -200,7 +200,7 @@ continua_6:
     addi $8, $8, 368         # 37 × 4
 
     # cor (ciano)
-    ori  $9, $0, 0x00FFFF
+    ori  $9, $0, 0xFF0000
     
 addi $11, $0, 8         # altura (linhas)
 
@@ -255,7 +255,7 @@ prox_linha_8:
 ############################ pinos rodas ########################################
 continua_8:
 	lui  $8, 0x1001          
-	ori $9,$, 0x0000FF
+	ori $9,$, 0x000000
     # posição inicial (linha 20, coluna 42)
     addi $8, $8, 10240        # 16 × 512
     addi $8, $8, 168         # 42 × 4
@@ -283,7 +283,7 @@ prox_linha_9:
     
 continua_9:
 	lui  $8, 0x1001          
-	ori $9,$0, 0x0000FF
+	ori $9,$0, 0x000000
     # posição inicial (linha 20, coluna 99)
     addi $8, $8, 10240        # 16 × 512
     addi $8, $8, 388       # 42 × 4
@@ -312,7 +312,7 @@ prox_linha_10:
 
 continua_10:
 	lui  $8, 0x1001          
-	ori $9,$0, 0x0000FF
+	ori $9,$0, 0x000000
     # posição inicial (linha 20, coluna 42)
     addi $8, $8, 21504        # 16 × 512
     addi $8, $8, 168         # 42 × 4
@@ -340,7 +340,7 @@ prox_linha_11:
     
 continua_11:
 	lui  $8, 0x1001          
-	ori $9,$0, 0x0000FF
+	ori $9,$0, 0x000000
     # posição inicial (linha 20, coluna 99)
     addi $8, $8, 21504        # 16 × 512
     addi $8, $8, 388       # 42 × 4
@@ -368,7 +368,7 @@ prox_linha_12:
 
 continua_12:
 	lui  $8, 0x1001    
-	ori  $9, $0, 0x00FFFF      
+	ori  $9, $0, 0xFF0000      
     # posição inicial (linha 20, coluna xx)
     addi $8, $8, 10240        # 20 × 512
     addi $8, $8, 204       # xx × 4
@@ -404,7 +404,7 @@ continua_13:
 
 loop_centro_lado_maior:
     beq  $11, $0, continua_15
-    ori  $9, $0, 0x00FFFF
+    ori  $9, $0, 0xFF0000
     addi $10, $0, 31          # largura (colunas)
     add  $12, $8, $0            # salva início da linha
 
@@ -433,7 +433,7 @@ continua_15:
 
 loop_ponta_1:
     beq  $11, $0, continua_16
-    ori  $9, $0, 0x0000FF
+    ori  $9, $0, 0x000000
     addi $10, $0, 4          # largura (colunas)
     add  $12, $8, $0            # salva início da linha
 
@@ -460,7 +460,7 @@ continua_16:
 
 loop_ponta_2:
     beq  $11, $0, espera_start
-    ori  $9, $0, 0x0000FF
+    ori  $9, $0, 0x000000
     addi $10, $0, 4          # largura (colunas)
     add  $12, $8, $0            # salva início da linha
 
@@ -502,7 +502,7 @@ main_jogo:
     
 loop_grama:  #background
     beq   $10, $0, comeca_pista
-    sw    $9, 0($8)                   # pinta de verde
+    sw    $9, 0($8)                   # pinta de cinza
     addi  $8, $8, 4
     addi  $10, $10, -1
     j     loop_grama
@@ -694,11 +694,79 @@ addi  $8, $8, -512            # sobe para a linha 49 (primeiro pixel a pintar)
 ori   $10, $0, 34             # 49 até 15 inclusive = 35 pixels
 
 completa_ultima_curva:
-    beq   $10, $0, start_carro
+    beq   $10, $0, cones
     sw    $9, 0($8)   
     addi  $8, $8, -512
     addi  $10, $10, -1
     j    completa_ultima_curva
+    
+############################
+# CONES FIXOS (obstáculo)
+############################
+
+cones:
+ori $30, $0, 0x00FFFFFF   # branco
+ori $31, $0, 0x00FFA500   # laranja
+lui  $8, 0x1001
+addi $8, $8, 7680        # linha 15
+addi $8, $8, 48         # coluna M (50 × 4)
+
+# linha 15
+sw   $30, 0($8)          # (15,M) branco
+sw   $31, 4($8)          # (15,N) laranja
+
+# linha 16
+sw   $31, 512($8)        # (16,M) laranja
+sw   $31, 516($8)        # (16,N) laranja
+
+# ===== CONE PQ =====
+
+lui  $8, 0x1001
+addi $8, $8, 7680        # linha 15
+addi $8, $8, 60        # coluna P (60 × 4)
+
+# linha 15
+sw   $30, 0($8)          # (15,P) branco
+sw   $31, 4($8)          # (15,Q) laranja
+
+# linha 16
+sw   $31, 512($8)        # (16,P) laranja
+sw   $31, 516($8)        # (16,Q) laranja
+
+    
+############################
+# LINHA DE CHEGADA
+############################
+
+comeca_linha_chegada: 
+    lui  $8, 0x1001
+    ori  $9, $0, 0x0000FF     # azul (linha de chegada)
+
+    # ----- linha 19 -----
+    addi $8, $8, 9728        # linha 19
+    addi $8, $8, 44          # coluna L
+    addi $10, $0, 7          # L até R
+
+linha_chegada_19:
+    beq  $10, $0, linha20
+    sw   $9, 0($8)
+    addi $8, $8, 4
+    addi $10, $10, -1
+    j    linha_chegada_19
+
+linha20:
+    lui  $8, 0x1001
+    addi $8, $8, 10240       # linha 20
+    addi $8, $8, 44          # coluna L
+    addi $10, $0, 7
+
+linha_chegada_20:
+    beq  $10, $0, start_carro
+    sw   $9, 0($8)
+    addi $8, $8, 4
+    addi $10, $10, -1
+    j    linha_chegada_20
+
    
 #começa carro
 start_carro:
@@ -888,6 +956,18 @@ j pula_movimento
 move_dir:   addi $19, $19, 4
 
 pula_movimento:
+# === CHECA LINHA DE CHEGADA ===
+    lw $24, 0($19)
+    beq $24, $9, venceu
+
+    lw $24, 4($19)
+    beq $24, $9, venceu
+
+    lw $24, 8($19)
+    beq $24, $9, venceu
+
+    lw $24, 12($19)
+    beq $24, $9, venceu
     # 6) CHECA COLISÃO COM A PISTA (depois do movimento)
     lw $24, 0($19)
     beq $24, $22, morreu
@@ -923,6 +1003,21 @@ delay_loop:
     bne $25, $0, delay_loop
 
     j loop_carro
+    
+venceu:
+    lui  $8, 0x1001        # base do bitmap
+    ori  $9, $0, 0x00FF00  # verde
+    ori  $10, $0, 32768    # tela toda
+
+pinta_verde:
+    beq  $10, $0, fim_verde
+    sw   $9, 0($8)
+    addi $8, $8, 4
+    addi $10, $10, -1
+    j    pinta_verde
+
+fim_verde:
+    j fim_verde            # trava aqui (vitória)
 
 morreu:
     ############################
@@ -935,226 +1030,30 @@ morreu:
     addi $7, $0, 115
     syscall
 
-    ############################
-    # LIMPA TELA (PRETO)
-    ############################
-    lui  $8, 0x1001
-    ori  $9, $0, 0x00000000   # preto
-    ori  $10, $0, 131072
+    # PINTA TELA TODA DE VERMELHO
+############################
+    lui $8, 0x1001            # base do bitmap
+    ori $9, $0, 0x00FF0000    # vermelho
+    ori $10, $0, 32768        # total de pixels (256 x 128)
 
-limpa_gameover:
-	lui $8, 0x1001
-
-    beq  $10, $0, desenha_gameover
+pinta_tela_vermelho:
+    beq  $10, $0, espera_restart
     sw   $9, 0($8)
     addi $8, $8, 4
     addi $10, $10, -1
-    j    limpa_gameover
-
-    ############################
-    # ESCREVE "GAME OVER"
-    ############################
-desenha_gameover:
-    lui  $8, 0x1001
-    addi $8, $8, 56320      # linha ~110
-    addi $8, $8, 512        # centro horizontal
-    ori  $9, $0, 0xFF0000   # vermelho
-
-########################
-# G
-########################
-    sw $9,   8($8)
-    sw $9,  12($8)
-    sw $9,  16($8)
-    sw $9,  20($8)
-
-    sw $9, 516($8)
-    sw $9, 536($8)
-
-    sw $9, 1028($8)
-    sw $9, 1040($8)
-    sw $9, 1044($8)
-
-    sw $9, 1540($8)
-    sw $9, 1560($8)
-
-    sw $9, 2056($8)
-    sw $9, 2060($8)
-    sw $9, 2064($8)
-    sw $9, 2068($8)
-
-    addi $8, $8, 32
-
-########################
-# A
-########################
-    sw $9,   8($8)
-    sw $9,  12($8)
-    sw $9,  16($8)
-    sw $9,  20($8)
-
-    sw $9, 516($8)
-    sw $9, 536($8)
-
-    sw $9, 1028($8)
-    sw $9, 1036($8)
-    sw $9, 1040($8)
-    sw $9, 1056($8)
-
-    sw $9, 1540($8)
-    sw $9, 1560($8)
-
-    sw $9, 2052($8)
-    sw $9, 2072($8)
-
-    addi $8, $8, 32
-
-########################
-# M
-########################
-    sw $9, 516($8)
-    sw $9, 536($8)
-
-    sw $9, 1028($8)
-    sw $9, 1036($8)
-    sw $9, 1044($8)
-    sw $9, 1056($8)
-
-    sw $9, 1540($8)
-    sw $9, 1548($8)
-    sw $9, 1560($8)
-
-    sw $9, 2052($8)
-    sw $9, 2072($8)
-
-    addi $8, $8, 32
-
-########################
-# E
-########################
-    sw $9,   4($8)
-    sw $9,   8($8)
-    sw $9,  12($8)
-    sw $9,  16($8)
-    sw $9,  20($8)
-
-    sw $9, 516($8)
-
-    sw $9, 1028($8)
-    sw $9, 1032($8)
-    sw $9, 1036($8)
-    sw $9, 1040($8)
-
-    sw $9, 1540($8)
-
-    sw $9, 2052($8)
-    sw $9, 2056($8)
-    sw $9, 2060($8)
-    sw $9, 2064($8)
-    sw $9, 2068($8)
-
-    addi $8, $8, 48   # espaço entre GAME e OVER
-
-########################
-# O
-########################
-    sw $9,   8($8)
-    sw $9,  12($8)
-    sw $9,  16($8)
-    sw $9,  20($8)
-
-    sw $9, 516($8)
-    sw $9, 536($8)
-
-    sw $9, 1028($8)
-    sw $9, 1056($8)
-
-    sw $9, 1540($8)
-    sw $9, 1560($8)
-
-    sw $9, 2056($8)
-    sw $9, 2060($8)
-    sw $9, 2064($8)
-    sw $9, 2068($8)
-
-    addi $8, $8, 32
-
-########################
-# V
-########################
-    sw $9, 516($8)
-    sw $9, 536($8)
-
-    sw $9, 1028($8)
-    sw $9, 1056($8)
-
-    sw $9, 1548($8)
-    sw $9, 1552($8)
-
-    sw $9, 2060($8)
-
-    addi $8, $8, 32
-
-########################
-# E
-########################
-    sw $9,   4($8)
-    sw $9,   8($8)
-    sw $9,  12($8)
-    sw $9,  16($8)
-    sw $9,  20($8)
-
-    sw $9, 516($8)
-
-    sw $9, 1028($8)
-    sw $9, 1032($8)
-    sw $9, 1036($8)
-    sw $9, 1040($8)
-
-    sw $9, 1540($8)
-
-    sw $9, 2052($8)
-    sw $9, 2056($8)
-    sw $9, 2060($8)
-    sw $9, 2064($8)
-    sw $9, 2068($8)
-
-    addi $8, $8, 32
-
-########################
-# R
-########################
-    sw $9,   4($8)
-    sw $9,   8($8)
-    sw $9,  12($8)
-    sw $9,  16($8)
-    sw $9,  20($8)
-
-    sw $9, 516($8)
-    sw $9, 536($8)
-
-    sw $9, 1028($8)
-    sw $9, 1036($8)
-    sw $9, 1040($8)
-
-    sw $9, 1540($8)
-    sw $9, 1556($8)
-    sw $9, 2052($8)
-    sw $9, 2072($8)
+    j    pinta_tela_vermelho
 
 
     ############################
-    # ESPERA TECLA (R = restart)
+    # ESPERA TECLA R ou r PARA REINICIAR
     ############################
 espera_restart:
     lui $17, 0xFFFF
-    lw  $18, 0($17)
+    lw $18, 0($17)
     beq $18, $0, espera_restart
-    lw  $19, 4($17)
-
-    beq $19, 'r', inicia_jogo
-    beq $19, 'R', inicia_jogo
-
+    lw $19, 4($17)
+    addi $15, $0, 114         # 'r'
+    beq $19, $15, inicia_jogo
+    addi $15, $0, 82          # 'R'
+    beq $19, $15, inicia_jogo
     j espera_restart
-
-    
