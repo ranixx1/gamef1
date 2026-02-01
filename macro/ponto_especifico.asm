@@ -3,9 +3,9 @@ lui   $8, 0x1001
     ori   $9, $9, 0xFF00          # amarelo
 
     # Linha X, coluna Y(12)
-    addi  $8, $8, 29696           # X-1×512 + Y×4 = 29696 + 48 = 29744? espera, recalculando certo:
-    # Forma segura e correta:
+    addi  $8, $8, 29696           # X-1×512 + Y×4 = 29696 + 48 = 29744
     lui   $8, 0x1001
+
     addi  $8, $8, 29696           # 58×512 = 29696 → vai pra linha 59
     addi  $8, $8, 48              # 12×4 = 48 → coluna L (12)
     sw    $9, 0($8)               # pinta linha 59, coluna L

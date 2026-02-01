@@ -21,10 +21,3 @@ A tela do display gráfico no MARS possui:
 
 ---
 
-## 🎯 Ir direto para qualquer posição (X, Y)
-
-> X = coluna (horizontal)  
-> Y = linha (vertical)
-
-📌 Fórmula:
-
